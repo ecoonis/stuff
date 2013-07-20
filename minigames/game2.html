@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	
+	<style>
+		body { padding:0; margin:0; font:18px bangers; }
+		#quickKey { position:relative; width:300px; height:125px; padding-top:75px; background:#eee; }
+		#quickKey #key { margin:auto; width:50px; height:50px; background:#ccc; z-index:20;
+			text-align:center; text-transform:uppercase; line-height:50px; font-size:36px; }
+		#quickKey #key.ok { background:lime; }
+		#quickKey #key.fail { background:red; }
+		#quickKey p { text-align:center; }
+	</style>
+	<script>
+		
+		function restart() {
+			
+			var keys = ['A','S','D','F'];
+			
+			$('#key').text('?');
+			$('#key').removeClass('fail').removeClass('ok');
+			
+			var delay = Math.floor((Math.random()*5)+1)*1000;
+			$('#key').delay(delay).fadeIn(function(){
+				
+				var random = Math.floor((Math.random()*3));
+				$('#key').text(keys[random]);
+				
+				var start = new Date();
+				var maxDuration = 2000;
+				
+				$(document).one('keyup', function(evt){
+					var now = new Date();
+					var duration = now.getTime()-start.getTime(); 
+					
+					if(String.fromCharCode(evt.keyCode) == $('#key').text()
+						&& duration < maxDuration) {
+							
+						$('#key').addClass('ok');
+						
+					} else {
+						$('#key').addClass('fail');
+					}
+					
+					window.clearTimeout(window.timeout);
+				
+					$(document).one('keyup', function(evt){
+						restart();
+					});
+				});
+				
+				window.timeout = window.setTimeout(function(){
+					$('#key').addClass('fail');
+				}, maxDuration);
+				
+			});		
+		}
+		
+		$(function(){
+			$(document).one('keyup', function(evt){
+				if(evt.keyCode == 32) {
+					restart();	
+				}
+			});			
+		});
+		
+	</script>
+	<div id="quickKey">
+		<div id="key"></div>
+		<p>2 Sec to press the char above.
+		<br>Space to (re)start.</p>
+	</div>
+</body>
+</html>

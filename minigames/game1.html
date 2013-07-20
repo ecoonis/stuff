@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#movingBoxes { position:relative; width:300px; height:200px; background:#eee; }
+		#movingBoxes .box { position:absolute; width:20px; height:20px; background:#666; top:0; z-index:30; color:#fff; text-align:center; }
+		#movingBoxes .box.ok { background:lime; }
+		#movingBoxes .box.fail { background:red; }
+		#movingBoxes #box1 { left:70px; }
+		#movingBoxes #box2 { left:140px; }
+		#movingBoxes #box3 { left:210px; }
+		#movingBoxes #bar { position:absolute; top:100px; width:300px; height:50px; background:#ccc; z-index:20; }
+		#movingBoxes p { position:absolute; color:#666; top:10px; width:300px; text-align:center; }
+	</style>
+	<script>
+		
+		$(function(){
+			
+			function animateBox(idx, itm) {
+				var levels = [2000, 1500, 1000];
+				var duration = levels[idx];
+				var random = Math.floor((Math.random()*10)+1);
+				$(itm).delay(random*100).animate({top:180}, duration, function(){
+					$(itm).animate({top:0}, duration, animateBox(idx, itm));
+				});
+			}
+			
+			function start() {
+				
+				$('.box').each(function(idx, itm){
+					$(itm).removeClass('ok').removeClass('fail');
+					$(itm).css('top', 0);
+					animateBox(idx, itm);
+				});
+				
+				$(document).off('keydown').on('keydown', function(evt){
+					evt.preventDefault();
+					evt.stopPropagation();
+					
+					if(evt.keyCode == 32) {
+						var box = $('.box:animated:first');
+						
+						if (box.length) {
+							box.stop(true);
+							var top = parseInt(box.css('top'));
+							if(top>=100 && top<=130) {
+								box.addClass('ok');
+							} else {
+								box.addClass('fail');
+							}	
+						} else {
+							start();
+						}
+					}
+				});				
+			}
+			
+			start();
+			
+		});
+		
+	</script>
+	<div id="movingBoxes">
+		<div>
+			
+			<p>Space to stop box by box on gray bar.
+			<br />Restart with space again.</p>
+			
+			<div id="box1" class="box">1</div>	
+			<div id="box2" class="box">2</div>	
+			<div id="box3" class="box">3</div>	
+			
+			<div id="bar"></div>	
+		</div>
+	</div>
+	
+</body>
+</html>

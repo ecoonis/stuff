@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-682459-4']);
+		_gaq.push(['_trackPageview']);
+		
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+</head>
+<body>
+	<style>
+		body { font:22px bangers; }
+		#page { width:960px; margin:auto; }
+		iframe { opacity:0.2; border:1px solid #eee; width:300px; height:200px; overflow:hidden; margin:5px; }
+		iframe.focus { opacity:1; border:1px solid #333; }
+	</style>
+	<script>
+		$(function(){
+			$(document).keydown(function(evt){
+				evt.preventDefault();
+				evt.stopPropagation();
+			});
+			$('iframe').mouseover(function(){
+				var iframe = $(this)[0];
+				iframe.contentWindow.focus();
+				
+				$('iframe').removeClass('focus');
+				$(this).addClass('focus');
+			})
+		});
+	</script>
+	<div id="page">
+		<iframe src="game1.html"></iframe>
+		<iframe src="game2.html"></iframe>
+		<iframe src="game3.html"></iframe>
+		
+		<!-- TO Check -->
+		<!-- 
+		<iframe src="game4.html"></iframe>
+		<iframe src="game5.html"></iframe>
+		<iframe src="game6.html"></iframe>
+		
+		<iframe src="game7.html"></iframe>
+		<iframe src="game8.html"></iframe>
+		<iframe src="game9.html"></iframe>
+		
+		<iframe src="game10.html"></iframe>
+		<iframe src="game11.html"></iframe>
+		<iframe src="game12.html"></iframe>
+		-->
+		
+		<!-- TODO -->
+		<!-- unlock the lock -->
+		<!-- walk the path -->
+		<!-- sort things -->
+		<!-- drag small to big -->
+		<!-- simple slots -->
+		<!-- fast calc -->
+		<!-- the color is -->
+		<!-- memory -->
+		
+	</div>
+</body>
+</html>

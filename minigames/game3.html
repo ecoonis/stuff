@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	
+	<style>
+		body { padding:0; margin:0; font:18px bangers; }
+		#rememberMe { position:relative; width:300px; height:185px; padding-top:15px; background:#eee; }
+		#rememberMe #field { width:120px; margin:auto; }
+		#rememberMe .key { width:30px; height:30px; line-height:30px; text-align:center; float:left; margin:5px; background:#ccc; }
+		#rememberMe .key.ok { background:lime; }
+		#rememberMe .key.fail { background:red; }
+		#rememberMe .active { background:#333; color:#fff; }
+		#rememberMe p, .c { clear:both; }
+		#rememberMe p { text-align:center; padding-top:10px; }
+	</style>
+	<script>
+		
+		var keys = []
+		var idx = 0;
+		
+		function press() {
+			key = Math.floor((Math.random()*8)+1);
+			keys.push(key);
+
+			$('.key:contains('+key+')').addClass('active');
+			window.setTimeout(function(){
+				$('.key').removeClass('active');
+			}, 400);
+		} 
+			
+		function restart() {
+			$('.key').removeClass('ok').removeClass('fail');
+			keys = [];
+			idx = 0;
+			
+			for(i=0; i<4; i++) {
+				window.setTimeout(press, i*1000);
+			}
+			
+			window.setTimeout(function(){
+
+				$(document).off('keyup').on('keyup', function(evt){
+					
+					if(String.fromCharCode(evt.keyCode) == keys[idx]) {
+						$('.key:contains('+keys[idx]+')').addClass('ok');
+					} else {
+						$('.key:contains('+keys[idx]+')').addClass('fail');
+					}
+					
+					idx++;
+					
+					if(idx == 4) {
+						$(document).one('keyup', function(evt){
+							if(evt.keyCode == 32) {
+								restart();	
+							}
+						});
+					}
+				});	
+				
+			}, 3000);
+		}
+		
+		$(function(){
+			$(document).one('keyup', function(evt){
+				if(evt.keyCode == 32) {
+					restart();	
+				}
+			});		
+		});
+		
+	</script>
+	<div id="rememberMe">
+		<div id="field">
+			<div class="key">1</div>
+			<div class="key">2</div>
+			<div class="key">3</div>
+			
+			<div class="key c">4</div>
+			<div class="key">5</div>
+			<div class="key">6</div>
+			
+			<div class="key c">7</div>
+			<div class="key">8</div>
+			<div class="key">9</div>
+		</div>
+		
+		<p>Remember the pressed numbers.
+			<br>Restart with Space.</p>
+	</div>
+</body>
+</html>
