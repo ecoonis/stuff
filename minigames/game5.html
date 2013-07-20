@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#clickIt { position:relative; width:300px; height:200px; background:#eee; }
+		#clickIt .box { cursor:pointer; position:absolute; width:20px; height:20px; background:#666; top:0; z-index:30; }
+		#clickIt p { position:absolute; color:#666; top:10px; width:300px; text-align:center; }
+		#clickIt #score { position:absolute; bottom:20px; right:20px; padding:5px; }
+	</style>
+	<script>
+		
+		$(function(){
+			
+			var ok = 0;
+			var fail = 0;
+			
+			function createBox() {
+				
+				if($('.box').length) {
+					$('.box').remove();
+					fail++;
+					$('#score').text('ok: '+ok+' fail: '+fail);
+				}
+				
+				var box = $('<div class="box"></div>');
+				
+				box.css('left', Math.floor((Math.random()*280)));
+				box.css('top', Math.floor((Math.random()*180)));
+				box.appendTo('#clickIt');
+				
+				$(box).click(function(){
+					$(this).remove();
+					ok++;
+					$('#score').text('ok: '+ok+' fail: '+fail);
+				});
+				
+				window.timeout = window.setTimeout(createBox, 2000);
+			}
+			
+			$('#clickIt').mouseleave(function(ev){
+				window.clearTimeout(window.timeout);
+				window.timeout = null;
+			});
+			
+			$('body').click(function(){
+				if(! window.timeout) {
+					createBox();	
+				}
+			});
+		});
+		
+	</script>
+	<div id="clickIt">
+		<p>Click the boxes as fast as you can.
+		<br>Start with click.</p>
+		<div id="score"></div>
+	</div>
+	
+</body>
+</html>

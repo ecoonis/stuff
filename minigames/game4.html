@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#preventFall { position:relative; width:300px; height:200px; background:#eee; }
+		#preventFall .box { position:absolute; width:20px; height:20px; background:#666; top:0; z-index:30; }
+		#preventFall .box.fail { background:red; }
+		#preventFall #player { position:absolute; bottom:20px; left:100px; height:20px; width:80px; background:#ccc; }
+		#preventFall p { position:absolute; color:#666; top:10px; width:300px; text-align:center; }
+	</style>
+	<script>
+		
+		$(function(){
+			
+			function animateBox(itm) {
+				var random = Math.floor((Math.random()*280));
+				$(itm).css('left', random+'px').animate({top:180}, {
+					duration: 2000,
+					progress: function() {
+						if(parseInt($(this).css('top')) > 140 && parseInt($(this).css('top')) < 150
+							&& parseInt($(this).css('left')) > parseInt($('#player').css('left'))
+							&& parseInt($(this).css('left'))+20 < parseInt($('#player').css('left'))+80) {
+								
+							$(this).stop().remove();
+						}
+					},
+					complete: function() {
+						$(this).addClass('fail');
+					}
+				});
+			}
+			
+
+			playerLeft = 100;
+
+			function start() {
+				
+				window.setInterval(function(){
+					var box = $('<div class="box"></div>').appendTo('#preventFall');
+					animateBox(box);
+				},2000);
+				
+				var playerLeft = parseInt($('#player').css('left'));
+				
+				$(document).keydown(function(evt){
+					if(evt.keyCode == 37) {
+						if(playerLeft > 0) {
+							$('#player').animate({'left':'-=8px'}, 50);	
+						}
+					} else if(evt.keyCode == 39) {
+						if(playerLeft < 220) {
+							$('#player').animate({'left':'+=8px'}, 50);
+						}
+					}
+				});
+			}
+
+			$(document).one('keydown', start);
+			
+		});
+		
+	</script>
+	<div id="preventFall">
+		<p>Prevent boxes from falling down.
+		<br />Start with any key.</p>
+		
+		<div id="player"></div>
+	</div>
+	
+</body>
+</html>

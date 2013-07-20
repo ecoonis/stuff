@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#highlightBox { position:relative; width:300px; height:200px; background:#eee; }
+		#highlightBox .box { float:left; margin:100px 40px 0 40px; width:20px; height:20px; background:#666; }
+		#highlightBox .box.active { background:#fff; }
+		#highlightBox .box.fail { background:red; }
+		#highlightBox .box.ok { background:lime; }
+		#highlightBox p { position:absolute; color:#666; top:10px; width:300px; text-align:center; }
+		#highlightBox #score { position:absolute; bottom:5px; right:10px; padding:5px; }
+	</style>
+	<script>
+		
+		$(function(){
+			
+			fail = 0;
+			ok = 0;
+			
+			function highlightBox() {
+				
+				updateScore();
+				
+				if ($('.box.active').length) {
+					$('.box.active').removeClass('active').addClass('fail');
+					fail++;
+					window.setTimeout(highlightBox, 2000);
+					return false;
+				}
+				
+				$('.box').removeClass('active ok fail');
+				
+				var random = Math.floor((Math.random()*3));	
+				$('.box:eq('+random+')').addClass('active').one('click', function(){
+					$(this).addClass('ok').removeClass('active');
+					ok++;
+				});
+				
+				window.setTimeout(highlightBox, 2000);
+			}
+			
+			function updateScore() {
+				$('#score').text('Fail: ' + fail + ' Ok: ' + ok);
+			}
+			
+			window.setTimeout(highlightBox, 2000);
+		});
+		
+	</script>
+	<div id="highlightBox">
+		<p>Click on the white box.</p>
+		
+		<div class="box"></div>
+		<div class="box"></div>
+		<div class="box"></div>
+		
+		<div id="score"></div>
+	</div>
+	
+</body>
+</html>
