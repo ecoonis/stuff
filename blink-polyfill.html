@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>Ultimative BLINK polyfill</title>
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
+        body { font:300 64px 'Open Sans'; }
+        p { text-align:center; margin:100px; }
+        footer { font-size:16px; text-align:center; }
+    </style>
+<body>
+    <p>
+        <blink>This text <strong>is blinking!</strong></blink>
+        <br /><span style="text-decoration:underline blink;">This text is <strong>blinking</strong> too!</span>
+    <footer>
+        <a target="_blank" href="http://bohuco.net/blog">bohuco.net/blog</a>
+        <br /><a target="_blank" href="https://twitter.com/ImpressiveWebs/status/367739426753220608">inspired by</a>
+
+<script type="text/javascript">
+    function blink() {
+        var tags = document.getElementsByTagName("*");
+        for (var i=0; i<tags.length; i++) {
+            if(tags[i].tagName == 'BLINK' || tags[i].style.textDecoration.indexOf('blink') >= 0) {
+                if (tags[i].style.visibility === 'visible') {
+                    tags[i].style.visibility = 'hidden';
+                    timeout = 250;
+                } else {
+                    tags[i].style.visibility = 'visible';
+                    timeout = 750;
+                }
+            }
+        }
+        window.setTimeout(blink, timeout);
+    }
+    blink();
+</script>
