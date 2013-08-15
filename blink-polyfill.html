@@ -3,20 +3,32 @@
     <title>Ultimative BLINK polyfill</title>
     <style>
         @import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
-        body { font:300 64px 'Open Sans'; }
-        p { text-align:center; margin:100px; }
-        footer { font-size:16px; text-align:center; }
+        body { font:300 18px 'Open Sans'; padding:100px; }
+        p, h1 { text-align:center; }
+        h1 { font-size:64px; }
+        footer { text-align:center; }
     </style>
 <body>
-    <p>
+    <h1>
         <blink>This text <strong>is blinking!</strong></blink>
-        <br /><span style="text-decoration:underline blink;">This text is <strong>blinking</strong> too!</span>
+        <br /><span style="text-decoration:blink underline;">This text is <strong>blinking</strong> too!</span>
+    </h1>
+    <p>
+        <strong>Issues:</strong>
+        <br />Safari removes not understandable CSS?
+        <br />Opera has a strage implementation for blinking
+    </p>
     <footer>
         <a target="_blank" href="http://bohuco.net/blog">bohuco.net/blog</a>
+        <br /><a target="_blank" href="https://github.com/DerFichtl/stuff">GitHub</a>
         <br /><a target="_blank" href="https://twitter.com/ImpressiveWebs/status/367739426753220608">inspired by</a>
+    </footer>
 
 <script type="text/javascript">
     function blink() {
+        if(navigator.appName.indexOf('opera')>=0) {
+            return false;
+        }
         var tags = document.getElementsByTagName("*");
         for (var i=0; i<tags.length; i++) {
             if(tags[i].tagName == 'BLINK' || tags[i].style.textDecoration.indexOf('blink') >= 0) {
