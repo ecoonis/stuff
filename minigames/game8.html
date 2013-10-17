@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#removeObstacles { position:relative; width:300px; height:200px; background:#eee; }
+		#removeObstacles #bar { position:absolute; bottom:60px; left:20px; height:20px; width:260px; background:#fff; }
+		#removeObstacles #player { position:absolute; height:20px; width:20px; background:#666; color:#fff; text-align:right; }
+		#removeObstacles #player.ok { background:lime; }
+		#removeObstacles .obstacle { cursor:pointer; position:absolute; height:20px; width:20px; background:#333; }
+		#removeObstacles #player.fail { background:red; }
+		#removeObstacles #o1 { left:100px; }
+		#removeObstacles #o2 { left:160px; }
+		#removeObstacles #o3 { left:240px; }
+		#removeObstacles p { cursor:pointer; position:absolute; color:#666; top:10px; width:300px; text-align:center; }
+	</style>
+	<script>
+		
+		$(function(){
+			
+			$('.obstacle').click(function(){
+				$(this).fadeOut(150);
+			});
+			
+			function start() {
+				
+				$('#player').removeClass('fail ok').css('width', '20px');
+				$('.obstacle').show();
+				
+				$('#player').animate({width:260}, {
+					duration: 3500,
+					progress: function() {
+						var obstacleLeft = parseInt($('.obstacle:visible:first').css('left'));
+						var width = parseInt($('#player').css('width'));
+						if(obstacleLeft < width) {
+							$('#player').addClass('fail');
+							$(this).stop();
+	
+							$('#removeObstacles p').one('click', start);
+						}
+					},
+					complete: function() {
+						$('#player').addClass('ok');
+						$('#removeObstacles p').one('click', start);
+					}
+				});
+					
+			}
+			
+			$('body').one('click', start);
+		});
+		
+	</script>
+	<div id="removeObstacles">
+		<div>
+			<p>Remove obstacles by clicking.
+			<br>Restart here.</p>
+			
+			<div id="box1" class="box"></div>	
+			<div id="box2" class="box"></div>	
+			<div id="box3" class="box"></div>	
+			
+			<div id="bar">
+				<div id="player">▶</div>
+				<div id="o1" class="obstacle"></div>
+				<div id="o2" class="obstacle"></div>
+				<div id="o3" class="obstacle"></div>
+			</div>	
+		</div>
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#missingParts { position:relative; width:300px; height:200px; background:#eee; }
+		#missingParts #bar { position:absolute; bottom:60px; left:20px; height:20px; width:260px; background:#fff; border:1px solid #fff; }
+		#missingParts #bar span { display:block; float:right; width:18px; height:20px; text-align:center; line-height:12px; font-size:30px; color:#ccc; }
+		#missingParts #player { position:absolute; height:20px; width:20px; background:#666; color:#fff; z-index:20; text-align:right; }
+		#missingParts #player.fail { background:red; }
+		#missingParts #player.ok { background:lime; }
+		#missingParts .gap { position:absolute; height:20px; width:20px; background:#eee; }
+		#missingParts #g1 { left:100px; }
+		#missingParts #g2 { left:160px; }
+		#missingParts #g3 { left:220px; }
+		#missingParts .box { cursor:pointer; position:absolute; height:20px; width:20px; background:#fff; color:#ccc; z-index:10; text-align:center; }
+		#missingParts #b1 { left:100px; top:21px; }
+		#missingParts #b2 { left:160px; top:-21px; }
+		#missingParts #b3 { left:220px; top:21px; }
+		#missingParts p { cursor:pointer; position:absolute; color:#666; top:10px; width:300px; text-align:center; }
+		
+	</style>
+	<script>
+		
+		$(function(){
+			
+			$('.box').click(function(){
+				$(this).animate({'top':0}, function(){
+					var id = $(this).attr('id').replace('b','g');
+					$('#'+id).hide();
+					$(this).css('color','#fff');
+				});
+			});
+			
+			function start() {
+				
+				$('#player').removeClass('fail ok').css('width', '20px');
+				$('.gap').show();
+				$('.box').css('top','');
+				
+				$('#player').animate({width:260}, {
+					duration: 6000,
+					progress: function() {
+						var gapLeft = parseInt($('.gap:visible:first').css('left'));
+						var width = parseInt($('#player').css('width'));
+						if(gapLeft < width) {
+							$('#player').addClass('fail');
+							$(this).stop();
+							
+							$('#missingParts p').one('click', start);
+						}
+					},
+					complete: function() {
+						$(this).addClass('ok');
+						
+						$('#missingParts p').one('click', start);
+					}
+				});	
+			}
+			
+			$('body').one('click', start);
+			
+		});
+		
+	</script>
+	<div id="missingParts">
+		<div>
+			<p>Road holes - fill the gaps.
+			<br>Restart here.</p>
+			
+			<div id="bar">
+				<div id="player">▶</div>
+				<div id="g1" class="gap"></div>
+				<div id="g2" class="gap"></div>
+				<div id="g3" class="gap"></div>
+				<div id="b1" class="box">▲</div>
+				<div id="b2" class="box">▼</div>
+				<div id="b3" class="box">▲</div>
+				<span>⨯</span>
+			</div>	
+		</div>
+	</div>
+	
+</body>
+</html>

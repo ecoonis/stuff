@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#changeDirection { position:relative; width:300px; height:200px; background:#eee; }
+		#changeDirection #player { position:absolute; height:20px; width:20px; top:0; background:#666; }
+		#changeDirection #bar { position:absolute; width:260px; height:40px; background:#fff; bottom:40px; left:20px; }
+		#changeDirection .obstacle { cursor:pointer; position:absolute; top:0; height:20px; width:20px; background:#333; }
+		#changeDirection #player.ok { background:lime; }
+		#changeDirection #player.fail { background:red; }
+		#changeDirection #o1 { left:100px; }
+		#changeDirection #o2 { left:160px; top:20px; }
+		#changeDirection #o3 { left:240px; }
+		#changeDirection p { cursor:pointer; position:absolute; color:#666; top:10px; width:300px; text-align:center; }
+	</style>
+	<script>
+		
+		$(function(){
+			
+			$(document).keydown(function(evt){
+				evt.preventDefault();
+				evt.stopPropagation();
+				
+				if(evt.keyCode == 40) {
+					$('#player').css('top', '20px');	
+				} else if (evt.keyCode == 38) {
+					$('#player').css('top', '0');
+				} else if(evt.keyCode == 32) {
+					start();
+				}
+			})
+			
+			function start() {
+				
+				$('#player').removeClass('fail ok').css({'left':0, 'top':0});
+				$('.obstacle').show();
+				
+				$('#player').animate({left:240}, {
+					duration: 3500,
+					progress: function() {
+						
+						var playerX = parseInt($('#player').css('left'))+20;
+						var playerY = parseInt($('#player').css('top'));
+						
+						$('.obstacle').each(function(idx, itm){
+							var oLeft = parseInt($(itm).css('left'));
+							var oTop = parseInt($(itm).css('top'));
+							if(playerX>oLeft && playerX<oLeft+20 && playerY == oTop) {
+								$('#player').stop().addClass('fail');
+							}
+						});
+					},
+					complete: function() {
+						$('#player').addClass('ok');
+						$('#removeObstacles p').one('click', start);
+					}
+				});
+					
+			}
+		});
+		
+	</script>
+	<div id="changeDirection">
+		<div>
+			<p>Avoid obstacles by up/down keys.
+			<br>Restart with space.</p>
+			
+			<div id="box1" class="box"></div>	
+			<div id="box2" class="box"></div>	
+			<div id="box3" class="box"></div>	
+			
+			<div id="bar">
+				<div id="player"></div>
+				<div id="o1" class="obstacle"></div>
+				<div id="o2" class="obstacle"></div>
+				<div id="o3" class="obstacle"></div>
+			</div>	
+		</div>
+	</div>
+	
+</body>
+</html>
