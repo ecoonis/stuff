@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#jumpAround { position:relative; width:300px; height:200px; background:#eee; }
+		#jumpAround #player { position:absolute; width:20px; height:20px; background:#666; top:160px; left:20px; }
+		#jumpAround #player.fail { background:red; }
+		#jumpAround #road { overflow:hidden; position:absolute; width:60px; height:200px; background:#fff; top:0; left:120px; }
+		#jumpAround .rock { position:absolute; width:20px; height:20px; background:#ccc; top:-30px; }
+		#jumpAround p { position:absolute; color:#666; top:0; width:300px; text-align:center; z-index:30; }
+		#jumpAround #score { position:absolute; bottom:10px; right:20px; padding:5px; color:#333; }
+	</style>
+	<script>
+		
+		$(function(){
+			
+			var playerLeft = 20;
+			var interval = null;
+            var running = false;
+            var score = 0;
+			
+			function addRock() {
+				var rock = $('<div class="rock"></div>');
+				
+				var left = Math.floor((Math.random()*3))*20;
+				$(rock).css('left', left).appendTo('#road');
+				
+				$(rock).animate({top:200}, {
+					duration: 2000,
+					progress: function() {
+						var top = parseInt($(this).css('top'))+20;
+						if(top>160 && top<180) {
+							var left = parseInt($(this).css('left'));
+							if(left == parseInt($('#player').css('left'))) {
+
+                                running = false;
+
+                                $('.rock').stop();
+								$('#player').addClass('fail');
+
+								window.clearInterval(interval);
+							}
+						}
+					},
+					complete: function() {
+                        score++;
+                        $('#score').text(score);
+						$(this).remove();
+					}
+				});
+			}
+
+            function init() {
+
+                $('#player').removeClass('fail');
+                $('.rock').remove();
+
+                window.clearInterval(interval);
+                interval = window.setInterval(addRock, 800);
+                running = true;
+            }
+			
+			$(document).keydown(function(evt){
+				evt.preventDefault();
+				evt.stopPropagation();
+					
+				if(evt.keyCode == 32) {
+					init();
+				} else if(evt.keyCode == 37) {
+					if(playerLeft>0 && running) {
+						playerLeft -= 20;
+						$('#player').css('left', playerLeft);	
+					}
+				} else if(evt.keyCode == 39) {
+					if(playerLeft<40 && running) {
+						playerLeft += 20;
+						$('#player').css('left', playerLeft);	
+					}
+				}
+			});
+			
+		});
+		
+	</script>
+	<div id="jumpAround">
+		<p>Avoid the rocks with left/right.
+		<br>Use space to start.</p>
+		<div id="road">
+			<div id="rock"></div>
+			<div id="player"></div>
+		</div>
+		<div id="score"></div>
+	</div>
+	
+</body>
+</html>

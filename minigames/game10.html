@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	
+	<style>
+		body { font:18px bangers; padding:0; margin:0; }
+		#dropBox { position:relative; width:300px; height:200px; background:#eee; }
+		#dropBox #box, #dropBox .box { position:absolute; width:20px; height:20px; background:#666; top:0; left:140px; z-index:30; }
+		#dropBox #bar { position:absolute; top:140px; height:20px; left:20px; width:100px; background:#ccc; }
+		#dropBox p { position:absolute; color:#666; top:60px; width:300px; text-align:center; }
+		#dropBox #score { position:absolute; bottom:10px; right:20px; padding:5px; color:#333; }
+	</style>
+	<script>
+		
+		$(function(){
+			
+			var ok = 0;
+			var fail = 0;
+			
+			function animateBar() {
+				$('#bar').animate({'left':200}, 2500, function(){
+					$('#bar').animate({'left':0}, 2500, animateBar);
+				});	
+			}
+			animateBar();
+			
+			function dropBox() {
+				
+				$('#box').animate({top:180}, {
+					duration: 900,
+					progress: function() {
+						var top = parseInt($('#box').css('top'))+20;
+						
+						if (top > 140 && top < 160) {
+							var left = parseInt($('#bar').css('left'));
+							var right = left+100;
+							if(left<140 && right>140) {
+								ok++;
+								$(this).stop();
+								
+								var newBox = $('#box').clone().css('top', 0);
+								$(newBox).appendTo('#dropBox');
+								
+								var offset = (left-140)*-1;
+								$('#box').css({'top':-20, 'left':offset}).appendTo('#bar').attr('id','');
+								
+								$('#score').text('ok: '+ok+' fail: '+fail);
+							}	
+						}
+					},
+					complete: function() {
+
+                        fail++;
+                        $('#score').text('ok: '+ok+' fail: '+fail);
+
+						var newBox = $('#box').clone().css('top', 0);
+						$('#box').remove();
+						$(newBox).appendTo('#dropBox');
+
+					}
+				});
+			}
+			
+			$(document).keydown(function(evt){
+				evt.preventDefault();
+				evt.stopPropagation();
+					
+				if(evt.keyCode == 32) {
+					dropBox();
+				}
+			});
+			
+		});
+		
+	</script>
+	<div id="dropBox">
+		<p>Drop a box to the moving bar.
+		<br>Use space to drop.</p>
+		<div id="box" class="box"></div>
+		<div id="bar"></div>
+		<div id="score"></div>
+	</div>
+	
+</body>
+</html>
