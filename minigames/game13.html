@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<style>
+    body { font:18px bangers; padding:0; margin:0; }
+    #jumpAround { overflow:hidden; position:relative; width:300px; height:200px; background:#eee; }
+    #jumpAround #player { display:none; position:absolute; width:20px; height:20px; background:#666; top:-20px; left:60px; }
+    #jumpAround #player.fail { background:red; }
+    #jumpAround #road { position:absolute; width:300px; height:20px; background:#ccc; bottom:0; left:0; }
+    #jumpAround .rock { position:absolute; width:20px; height:20px; background:#ccc; top:-20px; }
+    #jumpAround .large { height:39px; top:-39px; }
+    #jumpAround .long { height:20px; width:40px; top:-20px; }
+    #jumpAround p { position:absolute; color:#666; top:0; width:300px; text-align:center; z-index:30; }
+    #jumpAround #score { position:absolute; bottom:20px; left:20px; padding:5px; color:#333; }
+</style>
+<script>
+
+    $(function(){
+
+        var interval = null;
+        var running = false;
+        var score = 0;
+
+        function intersect(r1, r2) {
+            r1 = $(r1);
+            r2 = $(r2);
+            return !(
+                parseInt(r2.css('left')) > parseInt(r1.css('left'))+parseInt(r1.css('width')) ||
+                parseInt(r2.css('left')) + parseInt(r2.css('width')) < parseInt(r1.css('left')) ||
+                parseInt(r2.css('top')) > parseInt(r1.css('top')) + parseInt(r1.css('height')) ||
+                parseInt(r2.css('top')) + parseInt(r2.css('height')) < parseInt(r1.css('top')));
+        }
+
+        function addRock() {
+
+            var rock = $('<div class="rock"></div>');
+            var rockType = Math.floor((Math.random()*3));
+            if(rockType == 1) {
+                $(rock).addClass('large');
+            } else if(rockType == 2){
+                $(rock).addClass('long');
+            }
+
+            $(rock).css('left', 280).appendTo('#road');
+
+            $(rock).animate({left:-40}, {
+                duration: 2000,
+                progress: function() {
+
+                    if (intersect(rock, player)) {
+                        running = false;
+
+                        $('.rock').stop();
+                        $('#player').addClass('fail');
+
+                        window.clearInterval(interval);
+                    }
+
+                },
+                complete: function() {
+                    score++;
+                    $('#score').text(score);
+                    $(this).remove();
+                }
+            });
+        }
+
+        function init() {
+
+            score = 0;
+            $('#score').text(score);
+
+            $('#player').show();
+            $('#player').removeClass('fail');
+            $('.rock').remove();
+
+            window.clearInterval(interval);
+            interval = window.setInterval(addRock, 1200);
+            running = true;
+        }
+
+        $(document).keydown(function(evt){
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            if(evt.keyCode == 32) {
+                init();
+            } else if(evt.keyCode == 38) {
+                var playerPos = parseInt($('#player').css('top'));
+                if(running && playerPos > -70) {
+                    $('#player').animate({'top':-70});
+                }
+            }
+        });
+
+        $(document).keyup(function(evt){
+            if(evt.keyCode == 38) {
+                $('#player').stop().animate({'top':-20});
+            }
+        });
+
+    });
+
+</script>
+<div id="jumpAround">
+    <p>Avoid the rocks with up.
+        <br>Use space to start.</p>
+    <div id="road">
+        <div id="player"></div>
+        <div id="rock"></div>
+    </div>
+    <div id="score"></div>
+</div>
+
+</body>
+</html>
