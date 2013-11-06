@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<style>
+    body { font:18px bangers; padding:0; margin:0; }
+    #bounceAround { overflow:hidden; position:relative; width:300px; height:200px; background:#eee; }
+    #bounceAround p { text-align:center; }
+    #bounceAround #box { cursor:pointer; position:absolute; width:20px; height:20px; background:#666; }
+    #bounceAround #score { position:absolute; bottom:20px; left:20px; padding:5px; color:#333; }
+</style>
+<script>
+
+    $(function(){
+
+        var dt = 1;
+        var dl = 1;
+        var left = 150;
+        var top = 150;
+
+        var score = 0;
+
+        function init() {
+            var FPS = 60;
+
+            setInterval(function() {
+                update();
+                draw();
+            }, 1000/FPS);
+        }
+
+        init();
+
+        function update() {
+
+            if (left <= 0 || left >= 280) {
+                dl = dl * -1;
+            }
+            if (top <= 0 || top >= 180) {
+                dt = dt * -1;
+            }
+
+            left += dl;
+            top += dt;
+        }
+
+        function draw() {
+            $('#box').css({left:left, top:top});
+        }
+
+        $('#box').mousedown(function(){
+            $('#box').hide();
+
+            score++;
+            $('#score').text(score);
+
+            setTimeout(function(){
+                $('#box').show();
+            }, 1000);
+        });
+
+    });
+
+</script>
+<div id="bounceAround">
+    <p>Catch the box. Click on it.</p>
+    <div id="score"></div>
+    <div id="box"></div>
+</div>
+
+</body>
+</html>

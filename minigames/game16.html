@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<style>
+    body { padding:0; margin:0; font:18px bangers; }
+    #quickColor { text-align:center; position:relative; width:300px; height:175px; padding-top:25px; background:#eee; }
+    #quickColor #color { cursor:pointer; margin:auto; width:100px; height:50px; background:#ccc; z-index:20;
+        text-align:center; text-transform:uppercase; line-height:50px; font-size:36px; }
+    #quickColor #color.ok { color:lime; }
+    #quickColor #color.fail { color:red; }
+    #quickColor p { text-align:center; }
+    #quickColor button { cursor:pointer; display:inline-block; width:60px; height:30px; border:none; }
+    #quickColor #red { background:red; }
+    #quickColor #green { background:green; }
+    #quickColor #blue { background:blue; }
+</style>
+<script>
+
+    function restart() {
+
+        var colors = ['red','green','blue'];
+
+        $('#color').text('?');
+        $('#color').removeClass('fail').removeClass('ok');
+
+        var delay = Math.floor((Math.random()*5)+1)*1000;
+        $('#color').delay(delay).fadeIn(function(){
+
+            var randomText = Math.floor((Math.random()*3));
+            var randomColor = randomText+1;
+
+            if (! colors[randomColor]) {
+                randomColor = randomText-1;
+            }
+
+            $('#color').text(colors[randomText]).css('backgroundColor', colors[randomColor]);
+
+            var start = new Date();
+            var maxDuration = 2000;
+
+            $('button').one('click', function(){
+                if($(this).attr('id') == colors[randomText]) {
+                    $('#color').addClass('ok');
+                } else {
+                    $('#color').addClass('fail');
+                }
+                window.clearTimeout(window.timeout);
+            });
+
+            window.timeout = window.setTimeout(function(){
+                $('#color').addClass('fail');
+            }, maxDuration);
+
+        });
+    }
+
+    $(function(){
+        $('#color').click(restart);
+    });
+
+</script>
+<div id="quickColor">
+
+    <div id="color">Start</div>
+
+    <p>Click the Color stated as text.</p>
+
+    <button id="red"></button>
+    <button id="green"></button>
+    <button id="blue"></button>
+</div>
+</body>
+</html>
